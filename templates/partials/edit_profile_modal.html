@@ -1,0 +1,343 @@
+{% load static i18n %}
+<div
+  class="modal fade"
+  id="editProfileModal"
+  tabindex="-1"
+  aria-labelledby="editProfileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="editProfileModalLabel">Editar Perfil</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form id="editProfileForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <!-- Drop Zone with Preview -->
+              <label for="profile_picture" id="drop-zone" class="drop-zone">
+                <input
+                  type="file"
+                  id="profile_picture"
+                  name="profile_picture"
+                  class="d-none"
+                />
+                <div id="image-container" class="image-container">
+                  <img
+                    id="preview-image"
+                    src="{{ user.profile_image.url|default:'images/users/user-1.png' }}"
+                    alt="Preview"
+                  />
+                </div>
+                <p class="text-muted mt-4 font-12">
+                  Arraste uma imagem ou clique para selecionar
+                </p>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-3">
+                <label for="bio" class="form-label">Biografia</label>
+                <textarea
+                  class="form-control"
+                  id="bio"
+                  name="bio"
+                  rows="3"
+                  placeholder="Fale um pouco sobre você..."
+                >
+{{ user.bio }}</textarea
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="username" class="form-label">Nome</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  value="{{ user.username }}"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label text-muted">Email</label>
+                <input
+                  type="email"
+                  class="form-control text-muted"
+                  id="email"
+                  name="email"
+                  value="{{ user.email }}"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="city" class="form-label">Cidade</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="city"
+                  name="city"
+                  value="{{ user.address.city }}"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="city" class="form-label">Estado</label>
+                <select
+                  class="form-control select2-hidden-accessible"
+                  data-toggle="select2"
+                  data-width="100%"
+                  id="state"
+                  name="state"
+                  tabindex="1"
+                  aria-hidden="true"
+                >
+                  <option value="{{ user.address.state }}" disabled selected>
+                    {{ user.address.state }}
+                  </option>
+                  <option value="Acre">Acre</option>
+                  <option value="Alagoas">Alagoas</option>
+                  <option value="Amapá">Amapá</option>
+                  <option value="Amazonas">Amazonas</option>
+                  <option value="Bahia">Bahia</option>
+                  <option value="Ceará">Ceará</option>
+                  <option value="Distrito Federal">Distrito Federal</option>
+                  <option value="Espírito Santo">Espírito Santo</option>
+                  <option value="Goiás">Goiás</option>
+                  <option value="Maranhão">Maranhão</option>
+                  <option value="Mato Grosso">Mato Grosso</option>
+                  <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                  <option value="Minas Gerais">Minas Gerais</option>
+                  <option value="Pará">Pará</option>
+                  <option value="Paraíba">Paraíba</option>
+                  <option value="Paraná">Paraná</option>
+                  <option value="Pernambuco">Pernambuco</option>
+                  <option value="Piauí">Piauí</option>
+                  <option value="Rio de Janeiro">Rio de Janeiro</option>
+                  <option value="Rio Grande do Norte">
+                    Rio Grande do Norte
+                  </option>
+                  <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                  <option value="Rondônia">Rondônia</option>
+                  <option value="Roraima">Roraima</option>
+                  <option value="Santa Catarina">Santa Catarina</option>
+                  <option value="São Paulo">São Paulo</option>
+                  <option value="Sergipe">Sergipe</option>
+                  <option value="Tocantins">Tocantins</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="phone_number" class="form-label"
+                  >Telefone de contato</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone_number"
+                  name="phone_number"
+                  value="{{ user.phone_number }}"
+                  placeholder="Ex: 5521912345678"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="address_number" class="form-label"
+                  >Número da casa</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address_number"
+                  name="address_number"
+                  value="{{ user.address.address_number }}"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="postal_code" class="form-label">CEP</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postal_code"
+                  name="postal_code"
+                  value="{{ user.address.postal_code }}"
+                  placeholder="Ex: 12345-400"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="address_line" class="form-label">Endereço</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address_line"
+                  name="address_line"
+                  value="{{ user.address.address_line }}"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% block extra_css %}
+<style>
+  .drop-zone {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+  .image-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+  .drop-zone.drag-over {
+    border-color: #007bff;
+    background-color: #eaf4ff;
+  }
+</style>
+{% endblock %} {% block extra_javascript %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("profile_picture");
+    const previewImage = document.getElementById("preview-image");
+
+    // Highlight drop zone on drag over
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("drag-over");
+    });
+
+    // Handle file drop
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+
+      if (e.dataTransfer.files.length) {
+        const file = e.dataTransfer.files[0];
+        fileInput.files = e.dataTransfer.files;
+        const reader = new FileReader();
+
+        // Only update the preview without triggering file selector again
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+
+    // Handle file input change
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        // Only update the preview without triggering file selector again
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("editProfileForm");
+    const modal = document.getElementById("editProfileModal");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault(); // Evita o envio padrão do formulário
+      const formData = new FormData(form); // Cria o objeto FormData para envio
+      const csrfToken = form.querySelector(
+        '[name="csrfmiddlewaretoken"]'
+      ).value;
+
+      try {
+        const response = await fetch("{% url 'account_edit' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Sucesso - recarrega a página
+          window.location.reload();
+        } else {
+          // Erro - exibe os erros no toast
+          showToast("danger", result.message);
+        }
+      } catch (error) {
+        console.error("Erro ao enviar os dados:", error);
+        showToast("danger", "Ocorreu um erro inesperado. Tente novamente.");
+      }
+    });
+  });
+</script>
+{% endblock %}

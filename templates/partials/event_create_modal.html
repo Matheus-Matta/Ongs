@@ -1,0 +1,59 @@
+{% load static i18n %} {% block css %}
+<link
+  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+  rel="stylesheet"
+/>
+{% endblock css %}
+<div
+  class="modal fade"
+  id="eventModal"
+  tabindex="-1"
+  aria-labelledby="eventModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">Adicionar Evento</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="eventForm">
+          <div class="mb-3">
+            <label for="eventTitle" class="form-label">Título</label>
+            <input type="text" class="form-control" id="eventTitle" required />
+          </div>
+          <div class="mb-3">
+            <label for="eventDescription" class="form-label">Descrição</label>
+            <textarea
+              class="form-control"
+              id="eventDescription"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="eventDatetime" class="form-label">Data e Hora</label>
+            <input
+              type="text"
+              id="eventDatetime"
+              class="form-control flatpickr-input"
+              placeholder="Selecione a data e hora"
+              readonly="readonly"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar Evento</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_javascript %}
+
+{% endblock %}

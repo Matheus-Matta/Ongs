@@ -1,50 +1,77 @@
 {% load static i18n %}
 <!DOCTYPE html>
 <html lang="pt_br">
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      {% block head_title %}
+      
+      {% endblock head_title %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      content="A fully featured admin theme which can be used to build CRM, CMS, etc."
+      name="description"
+    />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<head>
-  <meta charset="utf-8" />
-  <title>{% block head_title %}{% endblock head_title %} | UBold - Responsive Admin Dashboard Template</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-  <meta content="Coderthemes" name="author" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
 
-  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <![endif]-->
+    <!-- App favicon -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" />
 
-  <!-- App favicon -->
-  <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    {% block css %}
+    <!-- Project-specific CSS -->
+    {% block extra_css %} {% endblock extra_css %} 
+    {% block css_wrapper %} 
+    {% include "partials/head-css.html" %} 
+    {% endblock css_wrapper %}
 
-  {% block css %}
+    <!-- Icons -->
+    <link
+      href="{% static 'css/icons.min.css' %}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    {% endblock css %}
+  </head>
 
-  {% block extra_css %}
-  {% endblock %}
-  <!-- This file stores project-specific CSS -->
+  <body {% block body_extra %}{% endblock body_extra %}>
+    {% block page_content %}
+    <!-- Main content will be injected here -->
+    {% endblock page_content %}
+  </body>
 
-  {% block css_wrapper %}
-  {% include "partials/head-css.html" %}
-  {% endblock css_wrapper %}
+  <!-- Le javascript -->
+  {% block javascript %}
+  <script src="{% static 'js/vendor.min.js' %}"></script>
 
-  <!-- icons -->
-  <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+  {% block extra_javascript %} {% endblock extra_javascript %}
 
-  {% endblock %}
-</head>
+  <script src="{% static 'js/bundle.min.js' %}"></script>
 
-<body {% block body_extra %}{% endblock %}>
-  {% block page_content %}{% endblock %}
-</body>
+  <script>
+     function showToast(type, message) {
+      const toastContainer = document.querySelector(".toast-container");
+      const toastHtml = `
+          <div class="toast align-items-center bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="d-flex">
+              <div class="toast-body text-white">${message}</div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div>
+        `;
+      toastContainer.insertAdjacentHTML("beforeend", toastHtml);
 
-<!-- Le javascript
-  ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-{% block javascript %}
-<script src="{% static 'js/vendor.min.js' %}"></script>
-{% block extra_javascript %}{% endblock %}
-<script src="{% static 'js/bundle.min.js' %}"></script>
-{% endblock javascript %}
-{% block extra_javascript_bottom %}{% endblock %}
+      const toastEl = toastContainer.lastElementChild;
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+  </script>
+  {% endblock javascript %} {% block extra_javascript_bottom %} 
+  {% endblock extra_javascript_bottom %}
 </html>

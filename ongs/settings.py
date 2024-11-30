@@ -11,16 +11,31 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Inicializar o django-environ
+env = environ.Env(
+    # Define valores padrões, caso as variáveis não estejam definidas
+    DEBUG=(bool, False)
+)
+
+# Lê o arquivo .env
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Configurações
+DEBUG = env('DEBUG')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q#@_w45140kk^0#i&0xok32=8js8!*asu*d2yxp7sgk4l0vlf-'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,10 +58,14 @@ DJANGO_APPS = [
 
 
 THIRD_PARTY_APPS = []
-
 LOCAL_APPS = [
     "account",
     
+]
+
+AUTHENTICATION_BACKENDS = [
+    'account.backends.EmailBackend',  # Backend personalizado
+    'django.contrib.auth.backends.ModelBackend',  # Backend padrão
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -145,3 +164,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "account_login"
 
 AUTH_USER_MODEL = 'account.User'  # Substitua 'app' pelo nome do seu aplicativo
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

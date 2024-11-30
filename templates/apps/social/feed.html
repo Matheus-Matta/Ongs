@@ -1,615 +1,149 @@
-{% extends "vertical_base.html" %} 
-{% load static i18n %} 
-{% block head_title%}{% trans "Social Feed" %}{% endblock head_title %} 
-{% block content %}
-<!-- Start Content-->
+{% extends "base.html" %} {% load static i18n %} {% block head_title %} Feed
+Social {% endblock head_title %} {% block css %} {{ block.super }}
+<style>
+  .ribbon-box {
+    position: relative;
+  }
+
+  .ribbon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 3px;
+  }
+  .post-image {
+    height: 240px !important;
+    margin: auto;
+  }
+
+  .fullscreenImageModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+  }
+  .fullscreenImage {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 8px;
+  }
+</style>
+{% endblock css %} {% block page_content %}
 <div class="container-fluid">
-  <!-- start page title -->
+  <!-- Início do título da página -->
   <div class="row">
     <div class="col-12">
       <div class="page-title-box">
-        <div class="page-title-right">
-          <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item">
-              <a href="javascript: void(0);">UBold</a>
-            </li>
-            <li class="breadcrumb-item">
-              <a href="javascript: void(0);">Apps</a>
-            </li>
-            <li class="breadcrumb-item active">Social Feed</li>
-          </ol>
-        </div>
         <h4 class="page-title">Social Feed</h4>
       </div>
     </div>
   </div>
-  <!-- end page title -->
+  <!-- Fim do título da página -->
 
   <div class="row">
+    <!-- Coluna da esquerda -->
     <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-1">
-      <!-- start profile info -->
-      <div class="card">
-        <div class="card-body">
-          <div class="dropdown float-end">
-            <a
-              href="#"
-              class="dropdown-toggle arrow-none card-drop"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-horizontal"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end">
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item"
-                >Edit Profile</a
-              >
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Settings</a>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-start">
-            <img
-              class="d-flex align-items-start rounded me-2"
-              src="{% static 'images/users/user-1.jpg' %}"
-              alt="Dominic Keller"
-              height="48"
-            />
-            <div class="w-100 ps-1">
-              <h5 class="mt-1 mb-0">Geneva McKnight</h5>
-              <p class="mb-1 mt-1 text-muted">California, USA</p>
-            </div>
-          </div>
-
-          <div class="list-group list-group-flush mt-2 font-15">
-            <a
-              href="javascript:void(0);"
-              class="
-                list-group-item list-group-item-action
-                text-primary
-                fw-semibold
-                border-0
-              "
-              ><i class="mdi mdi-image-filter-black-white font-16 me-1"></i>
-              News Feed</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-forum font-16 me-1"></i> Messages</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-calendar-month-outline font-16 me-1"></i>
-              Events</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-account-multiple-outline font-16 me-1"></i>
-              Friends</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-video font-16 me-1"></i> Watch Videos</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-image-multiple font-16 me-1"></i> Photos</a
-            >
-            <a
-              href="javascript:void(0);"
-              class="list-group-item list-group-item-action border-0"
-              ><i class="mdi mdi-storefront font-16 me-1"></i> Marketplaces</a
-            >
-          </div>
-
-          <h6 class="font-13 text-muted ps-3 my-3 text-uppercase">
-            Pages you Like
-          </h6>
-
-          <div class="px-2">
-            <div class="d-flex align-items-start mb-2">
-              <div class="avatar-xs bg-success rounded-circle">
-                <span class="avatar-title font-14 fw-bold text-white">F</span>
-              </div>
-              <div class="w-100 ps-2">
-                <span class="badge bg-pink mt-1 float-end">142</span>
-                <h5 class="mt-1 mb-0 font-family-primary fw-semibold">
-                  <a href="javascript: void(0);" class="text-reset"
-                    >Football Team</a
-                  >
-                </h5>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="avatar-xs bg-warning rounded-circle">
-                <span class="avatar-title font-14 fw-bold text-white">U</span>
-              </div>
-              <div class="w-100 ps-2">
-                <h5 class="mt-1 mb-0 font-family-primary fw-semibold">
-                  <a href="javascript: void(0);" class="text-reset"
-                    >UI/UX Community</a
-                  >
-                </h5>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="avatar-xs bg-info rounded-circle">
-                <span class="avatar-title font-14 fw-bold text-white">W</span>
-              </div>
-              <div class="w-100 ps-2">
-                <h5 class="mt-1 mb-0 font-family-primary fw-semibold">
-                  <a href="javascript: void(0);" class="text-reset"
-                    >Web Designer</a
-                  >
-                </h5>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- end profile info -->
-
-      <!-- video -->
-      <div class="card">
-        <div class="card-body">
-          <div class="dropdown float-end">
-            <a
-              href="#"
-              class="dropdown-toggle arrow-none card-drop"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-horizontal"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end">
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Today</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Yesterday</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Last Week</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Last Month</a>
-            </div>
-          </div>
-
-          <h4 class="header-title mb-1">Featured Video For You</h4>
-
-          <div class="mt-3">
-            <div class="ratio ratio-16x9">
-              <iframe
-                src="https://www.youtube.com/embed/9_eqq0HlN9g?autohide=0&showinfo=0&controls=0"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-        <!-- end card-body -->
-      </div>
-      <!-- end video -->
+      {% include 'partials/left-sidebar.html' %}
     </div>
-    <!-- end col -->
+    <!-- Fim da coluna da esquerda -->
 
+    <!-- Coluna central -->
     <div class="col-xl-6 col-lg-12 order-lg-2 order-xl-1">
-      <!-- new post -->
+      <!-- Nova postagem -->
       <div class="card">
         <div class="card-body p-0">
-          <ul class="nav nav-tabs nav-bordered">
-            <li class="nav-item">
-              <a
-                href="#newpost"
-                data-bs-toggle="tab"
-                aria-expanded="false"
-                class="nav-link active px-3 py-2"
-              >
-                <i
-                  class="mdi mdi-pencil-box-multiple font-18 d-md-none d-block"
-                ></i>
-                <span class="d-none d-md-block">Create Post</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                href="#photo-video"
-                data-bs-toggle="tab"
-                aria-expanded="true"
-                class="nav-link px-3 py-2"
-              >
-                <i class="mdi mdi-image font-18 d-md-none d-block"></i>
-                <span class="d-none d-md-block">Photos/Videos</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                href="#story"
-                data-bs-toggle="tab"
-                aria-expanded="true"
-                class="nav-link px-3 py-2"
-              >
-                <i
-                  class="mdi mdi-book-open-variant font-18 d-md-none d-block"
-                ></i>
-                <span class="d-none d-md-block">Story</span>
-              </a>
-            </li>
-          </ul>
-          <!-- end nav-->
           <div class="tab-content pt-0">
             <div class="tab-pane show active p-3" id="newpost">
-              <!-- comment box -->
+              <h4 class="header-title">Nova Postagem</h4>
+              <!-- Caixa de comentário -->
               <div class="border rounded">
-                <form action="#" class="comment-area-box">
+                <form id="postForm" enctype="multipart/form-data">
+                  {% csrf_token %}
                   <textarea
                     rows="4"
                     class="form-control border-0 resize-none"
-                    placeholder="Write something...."
+                    id="postText"
+                    name="text"
+                    placeholder="Escreva algo..."
                   ></textarea>
                   <div
-                    class="
-                      p-2
-                      bg-light
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                    "
+                    class="p-1 bg-light d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      <a href="#" class="btn btn-sm px-2 font-16 btn-light"
-                        ><i class="mdi mdi-image-outline"></i
-                      ></a>
-                      <a href="#" class="btn btn-sm px-2 font-16 btn-light"
-                        ><i class="mdi mdi-crosshairs-gps"></i
-                      ></a>
-                      <a href="#" class="btn btn-sm px-2 font-16 btn-light"
-                        ><i class="mdi mdi-attachment"></i
-                      ></a>
+                      <!-- Botão para adicionar imagens -->
+                      <label
+                        for="postImages"
+                        class="btn btn-sm px-1 font-20 btn-light"
+                      >
+                        <i class="mdi mdi-image-outline"></i>
+                        <input
+                          type="file"
+                          id="postImages"
+                          name="images"
+                          class="d-none"
+                          accept="image/*"
+                          multiple
+                        />
+                      </label>
+                      <!-- Botão para adicionar evento -->
+                      <button
+                        type="button"
+                        class="btn btn-sm p-0 font-20 btn-light"
+                        data-bs-toggle="modal"
+                        data-bs-target="#eventModal"
+                      >
+                        <i class="mdi mdi-calendar-plus"></i>
+                      </button>
                     </div>
                     <button type="submit" class="btn btn-sm btn-success">
-                      <i class="mdi mdi-send-outline me-1"></i>Post
+                      <i class="mdi mdi-send-outline me-1"></i>Publicar
                     </button>
                   </div>
+                  <!-- Previews -->
+                  <div id="imagePreview" class="d-flex flex-wrap"></div>
+                  <div id="eventPreview"></div>
+                  <!-- Campo oculto para dados do evento -->
+                  <input type="hidden" id="eventDetails" name="event" />
                 </form>
               </div>
-              <!-- end .border-->
-              <!-- end comment box -->
+              <!-- Fim da caixa de comentário -->
             </div>
-            <!-- end preview-->
           </div>
-          <!-- end tab-content-->
+          <!-- Fim do conteúdo das abas -->
         </div>
       </div>
-      <!-- end new post -->
+      <!-- Fim da nova postagem -->
 
-      <!-- Story Box-->
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex align-items-start">
-            <img
-              class="me-2 avatar-sm rounded-circle"
-              src="{% static 'images/users/user-3.jpg' %}"
-              alt="Generic placeholder image"
-            />
-            <div class="w-100">
-              <div class="dropdown float-end text-muted">
-                <a
-                  href="#"
-                  class="dropdown-toggle text-muted font-18"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="mdi mdi-dots-horizontal"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Edit</a>
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Delete</a>
-                </div>
-              </div>
-              <h5 class="m-0">
-                <a href="{% url 'apps:contacts.profile' %}" class="text-reset"
-                  >Jeremy Tomlinson</a
-                >
-              </h5>
-              <p class="text-muted"><small>about 2 minuts ago</small></p>
-            </div>
-          </div>
-          <p>
-            Story based around the idea of time lapse, animation to post soon!
-          </p>
-
-          <div class="row">
-            <div class="col-sm-8">
-              <img
-                src="{% static 'images/small/img-4.jpg' %}"
-                alt="post-img"
-                class="rounded me-1 mb-3 mb-sm-0 img-fluid"
-              />
-            </div>
-            <div class="col">
-              <img
-                src="{% static 'images/small/img-1.jpg' %}"
-                alt="post-img"
-                class="rounded me-1 img-fluid mb-3"
-              />
-              <img
-                src="{% static 'images/small/img-3.jpg' %}"
-                alt="post-img"
-                class="rounded me-1 img-fluid"
-              />
-            </div>
-          </div>
-
-          <div class="mt-2">
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted ps-0"
-              ><i class="mdi mdi-heart text-danger"></i> 2k Likes</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-comment-multiple-outline"></i> 184 Comments</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-share-variant"></i> Share</a
-            >
-          </div>
-
-          <div class="d-flex align-items-start mt-3">
-            <img
-              src="{% static 'images/users/user-1.jpg' %}"
-              height="32"
-              class="align-self-start rounded me-2"
-              alt="Arya Stark"
-            />
-            <div class="w-100">
-              <input
-                type="text"
-                class="form-control form-control-light border-0 form-control-sm"
-                placeholder="Write a comment"
-              />
-            </div>
-            <!-- end medi-body -->
-          </div>
-        </div>
+      <!-- Repita este bloco para cada história -->
+      <div class="card bg-transparent" id="caixaHistoria">
+        <!-- Caixa de história -->
       </div>
+      <!-- Fim da caixa de história -->
 
-      <!-- Story Box-->
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex align-items-start">
-            <img
-              class="me-2 avatar-sm rounded-circle"
-              src="{% static 'images/users/user-4.jpg' %}"
-              alt="Generic placeholder image"
-            />
-            <div class="w-100">
-              <div class="dropdown float-end text-muted">
-                <a
-                  href="#"
-                  class="dropdown-toggle text-muted font-18"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="mdi mdi-dots-horizontal"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Edit</a>
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Delete</a>
-                </div>
-              </div>
-              <h5 class="m-0">
-                <a href="{% url 'apps:contacts.profile' %}" class="text-reset"
-                  >Thelma Fridley</a
-                >
-              </h5>
-              <p class="text-muted"><small>about 1 hour ago</small></p>
-            </div>
-          </div>
-          <div class="font-16 text-center fst-italic text-dark">
-            <i class="mdi mdi-format-quote-open font-20"></i> Cras sit amet nibh
-            libero, in gravida nulla. Nulla vel metus scelerisque ante
-            sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-            viverra turpis. Duis sagittis ipsum. Praesent mauris. Fusce nec
-            tellus sed augue semper porta. Mauris massa.
-          </div>
-
-          <div class="mt-3">
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted ps-0"
-              ><i class="mdi mdi-heart-outline text-danger"></i> 751 Likes</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-comment-multiple-outline"></i> 85 Comments</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-share-variant"></i> Share</a
-            >
-          </div>
-
-          <div class="post-user-comment-box mt-2">
-            <div class="d-flex align-items-start">
-              <img
-                class="me-2 avatar-sm rounded-circle"
-                src="{% static 'images/users/user-3.jpg' %}"
-                alt="Generic placeholder image"
-              />
-              <div class="w-100">
-                <h5 class="mt-0">
-                  <a href="{% url 'apps:contacts.profile' %}" class="text-reset"
-                    >Jeremy Tomlinson</a
-                  >
-                  <small class="text-muted">3 hours ago</small>
-                </h5>
-                Nice work, makes me think of The Money Pit.
-
-                <br />
-                <a
-                  href="javascript: void(0);"
-                  class="text-muted font-13 d-inline-block mt-2"
-                  ><i class="mdi mdi-reply"></i> Reply</a
-                >
-
-                <div class="d-flex align-items-start mt-3">
-                  <a class="pe-2" href="#">
-                    <img
-                      src="{% static 'images/users/user-4.jpg' %}"
-                      class="avatar-sm rounded-circle"
-                      alt="Generic placeholder image"
-                    />
-                  </a>
-                  <div class="w-100">
-                    <h5 class="mt-0">
-                      <a
-                        href="{% url 'apps:contacts.profile' %}"
-                        class="text-reset"
-                        >Kathleen Thomas</a
-                      >
-                      <small class="text-muted">5 hours ago</small>
-                    </h5>
-                    i'm in the middle of a timelapse animation myself! (Very
-                    different though.) Awesome stuff.
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mt-2">
-              <a class="pe-2" href="#">
-                <img
-                  src="{% static 'images/users/user-1.jpg' %}"
-                  class="rounded-circle"
-                  alt="Generic placeholder image"
-                  height="31"
-                />
-              </a>
-              <div class="w-100">
-                <input
-                  type="text"
-                  id="simpleinput"
-                  class="form-control border-0 form-control-sm"
-                  placeholder="Add comment"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Story Box-->
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex align-items-start">
-            <img
-              class="me-2 avatar-sm rounded-circle"
-              src="{% static 'images/users/user-6.jpg' %}"
-              alt="Generic placeholder image"
-            />
-            <div class="w-100">
-              <div class="dropdown float-end text-muted">
-                <a
-                  href="#"
-                  class="dropdown-toggle text-muted font-18"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="mdi mdi-dots-horizontal"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Edit</a>
-                  <!-- item-->
-                  <a href="javascript:void(0);" class="dropdown-item">Delete</a>
-                </div>
-              </div>
-              <h5 class="m-0">
-                <a href="{% url 'apps:contacts.profile' %}" class="text-reset"
-                  >Jonathan Tiner</a
-                >
-              </h5>
-              <p class="text-muted"><small>15 hours ago</small></p>
-            </div>
-          </div>
-          <p>
-            The parallax is a little odd but O.o that house build is awesome!!
-          </p>
-
-          <iframe
-            src="https://player.vimeo.com/video/87993762"
-            height="300"
-            class="img-fluid border-0"
-          ></iframe>
-
-          <div class="mt-2">
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted ps-0"
-              ><i class="mdi mdi-heart text-danger"></i> 1.5k Likes</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-comment-multiple-outline"></i> 521 Comments</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-eye-outline"></i> 3.5k Views</a
-            >
-            <a
-              href="javascript: void(0);"
-              class="btn btn-sm btn-link text-muted"
-              ><i class="mdi mdi-share-variant"></i> Share</a
-            >
-          </div>
-
-          <div class="d-flex align-items-start mt-2">
-            <img
-              src="{% static 'images/users/user-1.jpg' %}"
-              height="32"
-              class="align-self-start rounded me-2"
-              alt="Arya Stark"
-            />
-            <div class="w-100">
-              <input
-                type="text"
-                class="form-control form-control-light border-0 form-control-sm"
-                placeholder="Write a comment"
-              />
-            </div>
-            <!-- end medi-body -->
-          </div>
-        </div>
-      </div>
-
-      <!-- loader -->
+      <!-- Loader -->
       <div class="text-center mb-3">
-        <a href="javascript:void(0);" class="text-danger"
-          ><i class="mdi mdi-spin mdi-loading me-1 font-16"></i> Load more
+        <a href="javascript:void(0);" class="text-danger">
+          <i class="mdi mdi-spin mdi-loading me-1 font-16"></i> Carregar mais
         </a>
       </div>
-      <!-- end loader -->
+      <!-- Fim do loader -->
     </div>
+    <!-- Fim da coluna central -->
 
+    <!-- Coluna da direita -->
     <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-2">
-      <!-- news -->
+      <!-- Notícias -->
       <div class="card">
         <div class="card-body">
           <div class="dropdown float-end">
@@ -622,73 +156,37 @@
               <i class="mdi mdi-dots-horizontal"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-end">
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Today</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Yesterday</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Last Week</a>
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">Last Month</a>
+              <a href="javascript:void(0);" class="dropdown-item">Hoje</a>
+              <a href="javascript:void(0);" class="dropdown-item">Ontem</a>
+              <a href="javascript:void(0);" class="dropdown-item"
+                >Semana Passada</a
+              >
+              <a href="javascript:void(0);" class="dropdown-item"
+                >Mês Passado</a
+              >
             </div>
           </div>
 
-          <h4 class="header-title mb-1">Trending</h4>
+          <h4 class="header-title mb-1">Em Alta</h4>
 
+          <!-- Notícias em alta -->
           <div class="d-flex align-items-start mt-3">
             <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
             <div class="w-100">
               <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
-                <strong>Golden Globes:</strong>
-                <span class="text-muted">
-                  The 27 Best moments from the Golden Globe Awards
-                </span>
+                <strong>Globos de Ouro:</strong>
+                <span class="text-muted"
+                  >Os 27 melhores momentos da premiação</span
+                >
               </a>
             </div>
           </div>
-
-          <div class="d-flex align-items-start mt-3">
-            <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
-            <div class="w-100">
-              <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
-                <strong>World Cricket:</strong>
-                <span class="text-muted">
-                  India has won ICC T20 World Cup Yesterday
-                </span>
-              </a>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-start mt-3">
-            <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
-            <div class="w-100">
-              <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
-                <strong>Antartica:</strong>
-                <span class="text-muted">
-                  Metling of Totten Glacier could cause high risk to areas near
-                  by sea
-                </span>
-              </a>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-start mt-3">
-            <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
-            <div class="w-100">
-              <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
-                <strong>Global Tournament:</strong>
-                <span class="text-muted">
-                  America has won Football match Yesterday
-                </span>
-              </a>
-            </div>
-          </div>
+          <!-- Mais notícias... -->
         </div>
-        <!-- end card-body-->
       </div>
-      <!-- end card-->
+      <!-- Fim das notícias -->
 
-      <!-- People -->
+      <!-- Pessoas que você talvez conheça -->
       <div class="card">
         <div class="card-body pb-0">
           <div class="dropdown float-end">
@@ -701,24 +199,24 @@
               <i class="mdi mdi-dots-horizontal"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-end">
-              <!-- item-->
-              <a href="javascript:void(0);" class="dropdown-item">View All</a>
+              <a href="javascript:void(0);" class="dropdown-item">Ver Todos</a>
             </div>
           </div>
 
-          <h4 class="header-title mb-3">People you may know</h4>
+          <h4 class="header-title mb-3">Pessoas que você talvez conheça</h4>
 
           <div class="inbox-widget">
+            <!-- Exemplo de pessoa -->
             <div class="inbox-item">
               <div class="inbox-item-img">
                 <img
-                  src="{% static 'images/users/user-2.jpg' %}"
+                  src="{% static 'images/users/user-2.png' %}"
                   class="rounded-circle"
                   alt=""
                 />
               </div>
               <p class="inbox-item-author">Robb Stark</p>
-              <p class="inbox-item-text">The first king in the North</p>
+              <p class="inbox-item-text">O primeiro rei do Norte</p>
               <p class="inbox-item-date">
                 <button
                   type="button"
@@ -728,97 +226,310 @@
                 </button>
               </p>
             </div>
-            <div class="inbox-item">
-              <div class="inbox-item-img">
-                <img
-                  src="{% static 'images/users/user-3.jpg' %}"
-                  class="rounded-circle"
-                  alt=""
-                />
-              </div>
-              <p class="inbox-item-author">Stillnot David</p>
-              <p class="inbox-item-text">Lady of winterfall</p>
-              <p class="inbox-item-date">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary px-1 py-0"
-                >
-                  <i class="mdi mdi-plus font-16"></i>
-                </button>
-              </p>
-            </div>
-            <div class="inbox-item">
-              <div class="inbox-item-img">
-                <img
-                  src="{% static 'images/users/user-4.jpg' %}"
-                  class="rounded-circle"
-                  alt=""
-                />
-              </div>
-              <p class="inbox-item-author">Cersei Lannister</p>
-              <p class="inbox-item-text">Queen of the Seven Kingdoms</p>
-              <p class="inbox-item-date">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary px-1 py-0"
-                >
-                  <i class="mdi mdi-plus font-16"></i>
-                </button>
-              </p>
-            </div>
-
-            <div class="inbox-item">
-              <div class="inbox-item-img">
-                <img
-                  src="{% static 'images/users/user-5.jpg' %}"
-                  class="rounded-circle"
-                  alt=""
-                />
-              </div>
-              <p class="inbox-item-author">Daenerys Targaryen</p>
-              <p class="inbox-item-text">Hey! there I'm available...</p>
-              <p class="inbox-item-date">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary px-1 py-0"
-                >
-                  <i class="mdi mdi-plus font-16"></i>
-                </button>
-              </p>
-            </div>
-            <div class="inbox-item">
-              <div class="inbox-item-img">
-                <img
-                  src="{% static 'images/users/user-6.jpg' %}"
-                  class="rounded-circle"
-                  alt=""
-                />
-              </div>
-              <p class="inbox-item-author">Adhamd Annaway</p>
-              <p class="inbox-item-text">Queen Daenerys</p>
-              <p class="inbox-item-date">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary px-1 py-0"
-                >
-                  <i class="mdi mdi-plus font-16"></i>
-                </button>
-              </p>
-            </div>
+            <!-- Mais pessoas... -->
           </div>
-          <!-- end inbox-widget -->
 
           <div class="mt-2 mb-3 text-center">
-            <a href="">View More <i class="mdi mdi-arrow-right"></i></a>
+            <a href="">Ver Mais <i class="mdi mdi-arrow-right"></i></a>
           </div>
         </div>
-        <!-- end card-body -->
       </div>
-      <!-- end video -->
+      <!-- Fim das pessoas que você talvez conheça -->
     </div>
-    <!-- end col -->
+    <!-- Fim da coluna da direita -->
   </div>
-  <!--end row -->
+  <!-- Fim da row -->
+  <div id="fullscreenImageModal" class="fullscreenImageModal">
+    <img
+      id="fullscreenImage"
+      class="fullscreenImage"
+      src=""
+      alt="Imagem em tela cheia"
+    />
+  </div>
 </div>
-<!-- container -->
-{% endblock %}
+
+{% include 'partials/edit_profile_modal.html' %} 
+{% include 'partials/event_create_modal.html' %} 
+{% include 'partials/perfil_modal.html' %}
+{% include 'partials/toast_message.html' %}
+
+<!-- Fim do container -->
+{% endblock page_content %} {% block javascript %} {{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const postForm = document.getElementById("postForm");
+    const eventForm = document.getElementById("eventForm");
+    const imagePreview = document.getElementById("imagePreview");
+    const eventPreview = document.getElementById("eventPreview");
+    const postImagesInput = document.getElementById("postImages");
+    const eventDatetimeInput = document.getElementById("eventDatetime");
+
+    let eventDetails = null;
+
+    // Inicializa o Flatpickr para o campo de data e hora
+    const flatpickrInstance = flatpickr("#eventDatetime", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: true,
+      minDate: "today",
+    });
+
+    // Preview e manipulação das imagens
+    const imageFiles = new Set();
+
+    postImagesInput.addEventListener("change", function () {
+      Array.from(this.files).forEach((file) => {
+        if (!imageFiles.has(file)) {
+          imageFiles.add(file);
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.className = "img-thumbnail mt-1 mb-1 ms-1";
+            img.style.width = "50px";
+            img.style.height = "50px";
+            img.style.cursor = "pointer";
+
+            // Hover para escurecer a imagem
+            img.addEventListener("mouseover", () => {
+              img.style.filter = "brightness(0.5)";
+            });
+
+            img.addEventListener("mouseout", () => {
+              img.style.filter = "brightness(1)";
+            });
+
+            // Remover imagem ao clicar
+            img.addEventListener("click", () => {
+              imageFiles.delete(file);
+              img.remove();
+            });
+
+            imagePreview.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Limpa o input para permitir novas seleções de arquivos
+      this.value = "";
+    });
+
+    // Salvar evento no modal
+    eventForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const datetimeValue = eventDatetimeInput.value;
+
+      eventDetails = {
+        title: document.getElementById("eventTitle").value,
+        description: document.getElementById("eventDescription").value,
+        datetime: datetimeValue,
+      };
+
+      // Atualiza o preview do evento
+      eventPreview.innerHTML = `
+        <div class="alert alert-info m-2 d-flex justify-content-between align-items-center">
+          <span>Evento criado!</span>
+          <div>
+            <button type="button" class="btn btn-sm btn-primary me-2" id="editEventButton">Editar</button>
+            <button type="button" class="btn btn-sm btn-danger" id="deleteEventButton">
+              <i class="mdi mdi-trash-can-outline"></i>
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Botão de editar evento
+      document
+        .getElementById("editEventButton")
+        .addEventListener("click", () => {
+          const modal = new bootstrap.Modal(
+            document.getElementById("eventModal")
+          );
+          modal.show();
+
+          // Preenche os campos do modal com os dados atuais do evento
+          document.getElementById("eventTitle").value = eventDetails.title;
+          document.getElementById("eventDescription").value =
+            eventDetails.description;
+          eventDatetimeInput.value = eventDetails.datetime;
+        });
+
+      // Botão de excluir evento
+      document
+        .getElementById("deleteEventButton")
+        .addEventListener("click", () => {
+          eventDetails = null; // Reseta os dados do evento
+          eventPreview.innerHTML = ""; // Remove o preview do evento
+
+          document.getElementById("eventTitle").value = "";
+          document.getElementById("eventDescription").value = "";
+          eventDatetimeInput.value = ""; // Limpa o valor do campo
+          flatpickrInstance.clear(); // Reseta o Flatpickr
+        });
+
+      // Fecha o modal
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("eventModal")
+      );
+      modal.hide();
+    });
+
+    // Submissão do post
+    postForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData();
+
+      // Adiciona texto ao FormData
+      const text = document.getElementById("postText").value;
+      if (text) {
+        formData.append("text", text);
+      }
+
+      // Adiciona imagens ao FormData
+      imageFiles.forEach((file) => formData.append("images", file));
+
+      // Adiciona evento ao FormData, se existir
+      if (eventDetails) {
+        formData.append("event", JSON.stringify(eventDetails));
+      }
+
+      const csrfToken = postForm.querySelector(
+        '[name="csrfmiddlewaretoken"]'
+      ).value;
+
+      try {
+        const response = await fetch("{% url 'create_post' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          window.location.reload();
+        } else {
+          showToast("danger", result.message);
+        }
+      } catch (error) {
+        console.error("Erro ao criar o post:", error);
+      }
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const carouselModal = document.getElementById("carouselModal");
+    const carouselImages = document.getElementById("carouselImages");
+
+    document.querySelectorAll(".position-relative").forEach((imageWrapper) => {
+      imageWrapper.addEventListener("click", () => {
+        const postImages = imageWrapper.closest(".row").querySelectorAll("img");
+        carouselImages.innerHTML = ""; // Limpa imagens antigas
+
+        postImages.forEach((img) => {
+          const slide = document.createElement("div");
+          slide.className = "carousel-item";
+          slide.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="...">`;
+          carouselImages.appendChild(slide);
+        });
+
+        carouselImages.firstChild.classList.add("active"); // Ativa o primeiro slide
+        const modal = new bootstrap.Modal(carouselModal);
+        modal.show();
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const caixaHistoria = document.getElementById("caixaHistoria");
+    const loadMoreButton = document.querySelector(".text-center a.text-danger");
+    let nextPage = 1;
+
+    // Função para carregar posts
+    async function loadPosts(page = 1) {
+      try {
+        const response = await fetch(`/account/load-posts/${page}`);
+        const result = await response.json();
+        if (response.ok) {
+          document
+            .getElementById("caixaHistoria")
+            .insertAdjacentHTML("beforeend", result.html);
+
+          // Verifica se ainda há mais páginas para carregar
+          if (!result.html.trim()) {
+            loadMoreButton.style.display = "none"; // Esconde o botão se não houver mais conteúdo
+          }
+        } else {
+          console.error("Erro ao carregar posts.");
+          showToast("danger", result.message);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    }
+
+    // Carregamento inicial
+    loadPosts(nextPage);
+
+    // Evento para carregar mais posts
+    if (loadMoreButton) {
+      loadMoreButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        nextPage++;
+        loadPosts(nextPage);
+      });
+    }
+  });
+
+  // Função para abrir o modal de imagem
+  async function showImageModal(url) {
+    const modal = document.getElementById("fullscreenImageModal");
+    const modalImage = document.getElementById("fullscreenImage");
+
+    modalImage.src = url;
+    modal.style.display = "flex";
+
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        modalImage.src = "";
+      }
+    });
+  }
+
+  async function participar_evento(url) {
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
+      if (response.ok) {
+        const btn = document.querySelector(`a[data-url="${url}"]`);
+        const div = btn.parentNode;
+        btn.remove();
+        div.insertAdjacentHTML(
+          "beforeend",
+          `
+          <button class="btn btn-success p-1 mt-2" disabled>
+            Participando
+          </button>
+          `
+        );
+        showToast("success", result.message);
+      } else {
+        console.error("Erro ao carregar posts.");
+        showToast("danger", result.message);
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  }
+</script>
+
+{% endblock javascript %}

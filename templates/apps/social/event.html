@@ -1,0 +1,91 @@
+{% extends "base.html" %} {% load static i18n %} {% block head_title %} Events {% endblock head_title %} {% block css %} {{ block.super }} 
+<div class="container-fluid">
+  <!-- Início do título da página -->
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <h4 class="page-title">Social Feed</h4>
+      </div>
+    </div>
+  </div>
+  <!-- Fim do título da página -->
+
+  <div class="row">
+    <!-- Coluna da esquerda -->
+    <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-1">
+      {% include 'partials/left-sidebar.html' %}
+    </div>
+    <!-- Fim da coluna da esquerda -->
+    <div class="col-xl-9 col-lg-6 order-lg-2 order-xl-2">
+        <div class="container-fluid">
+            <div class="page-title-box">
+              <h4 class="page-title">Eventos</h4>
+            </div>
+      
+            <!-- Meus Eventos -->
+            <h5>Meus Eventos</h5>
+            <div class="row">
+              {% for event in user_events %}
+              <div class="col-lg-4">
+                <div class="card project-box">
+                  <div class="card-body">
+                    <div class="dropdown float-end">
+                      <a
+                        href="#"
+                        class="dropdown-toggle card-drop"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="#">Editar</a>
+                        <a class="dropdown-item" href="#">Excluir</a>
+                      </div>
+                    </div>
+                    <h4 class="mt-0">
+                      <a href="#" class="text-dark">{{ event.title }}</a>
+                    </h4>
+                    <p class="text-muted">{{ event.date }} às {{ event.time }}</p>
+                    <p class="text-muted">{{ event.description }}</p>
+                    <a href="#" class="btn btn-primary">Ver Detalhes</a>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <p class="text-muted">Você não possui eventos futuros.</p>
+              {% endfor %}
+            </div>
+      
+            <!-- Outros Eventos -->
+            <h5>Outros Eventos</h5>
+            <div class="row">
+              {% for event in other_events %}
+              <div class="col-lg-4">
+                <div class="card project-box">
+                  <div class="card-body">
+                    <h4 class="mt-0">
+                      <a href="#" class="text-dark">{{ event.title }}</a>
+                    </h4>
+                    <p class="text-muted">{{ event.date }} às {{ event.time }}</p>
+                    <p class="text-muted">{{ event.description }}</p>
+                    <a href="#" class="btn btn-primary">Ver Detalhes</a>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <p class="text-muted">Nenhum outro evento disponível.</p>
+              {% endfor %}
+            </div>
+          </div>
+    <div>
+
+  </div>
+  <!-- Fim da row -->
+</div>
+
+<!-- Fim do container -->
+{% endblock %} 
+{%block javascript%} 
+{{ block.super}}
+{% endblock javascript %}

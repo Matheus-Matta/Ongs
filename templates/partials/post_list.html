@@ -1,0 +1,115 @@
+{% for post in page_obj.object_list %}
+<div class="card card-body mb-1">
+  <!-- Informações do usuário -->
+  <div class="d-flex align-items-start">
+    <img
+      class="me-2 avatar-sm rounded-circle"
+      src="{{ post.user.profile_image.url|default:'images/users/default-user.png' }}"
+      alt="{{ post.user.username }}"
+      onclick="showUserProfile('{{ user.id }}')"
+    />
+    <div class="w-100">
+      <h5 class="m-0">{{ post.user.username }}</h5>
+      <p class="text-muted m-0"><small>{{ post.created_at }}</small></p>
+    </div>
+  </div>
+
+  <!-- Texto -->
+  {% if post.text %}
+  <p class="m-0 mt-2 font-18">{{ post.text }}</p>
+  {% endif %}
+
+  <!-- image -->
+  {% if post.images.exists %}
+  <div
+    id="carouselPost{{ post.id }}"
+    class="carousel slide pointer-event"
+    data-bs-ride="carousel"
+  >
+    <!-- Slides -->
+    <div class="carousel-inner" role="listbox">
+      {% for image in post.images.all %}
+      <div
+        class="carousel-item {% if forloop.first %}active{% endif %} bg-light mt-2"
+      >
+        <img
+          class="d-block img-fluid post-image"
+          src="{{ image.image.url }}"
+          alt="Slide {{ forloop.counter }}"
+          onclick="showImageModal('{{ image.image.url }}')"
+        />
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Controles -->
+    {% if post.images.count > 1 %}
+    <a
+      class="carousel-control-prev"
+      href="#carouselPost{{ post.id }}"
+      role="button"
+      data-bs-slide="prev"
+    >
+      <span
+        class="carousel-control-prev-icon text-dark"
+        aria-hidden="true"
+      ></span>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    <a
+      class="carousel-control-next"
+      href="#carouselPost{{ post.id }}"
+      role="button"
+      data-bs-slide="next"
+    >
+      <span
+        class="carousel-control-next-icon text-dark"
+        aria-hidden="true"
+      ></span>
+      <span class="visually-hidden">Next</span>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Evento -->
+  {% if post.event %}
+  <div class="p-0 m-0 mt-1 bg-light">
+    <div class="card m-0 text-white bg-primary text-xs-center">
+      <div class="card-body p-2">
+        <blockquote class="card-bodyquote mb-0">
+          <div class="d-flex justify-content-between mb-2">
+            <h5 class="p-0 m-0 font-18 card-title text-white">
+              {{ post.event.title }}
+            </h5>
+            <span class="badge bg-light text-dark font-14 p-1 op-1">
+              Evento</span
+            >
+          </div>
+          <footer>
+            <p>{{ post.event.description }}</p>
+            <small class="fst-italic"
+              >{{ post.event.date }} {{ post.event.time }}</small
+            >
+          </footer>
+          {% if post.is_volunteer %}
+          <!-- Botão desabilitado se o usuário já for voluntário -->
+          <button class="btn btn-success p-1 mt-2" disabled>
+            Participando
+          </button>
+          {% else %}
+          <!-- Botão para participar do evento -->
+          <a
+            onclick="participar_evento(`{% url 'participar_evento' post.event.id %}`)"
+            class="btn btn-info p-1 mt-2"
+            data-url="{% url 'participar_evento' post.event.id %}"
+            >Participar</a
+          >
+          {% endif %}
+        </blockquote>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endfor %}

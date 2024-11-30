@@ -1,0 +1,78 @@
+<!-- Modal for User Profile -->
+<div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userProfileModalLabel">Perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Profile Image -->
+          <div class="text-center mb-3">
+            <img id="profileImage" src="" class="rounded-circle" alt="Profile Image" style="width: 100px; height: 100px;">
+          </div>
+          <!-- Profile Details -->
+          <h5 id="profileName" class="text-center"></h5>
+          <p id="profileBio" class="text-center text-muted"></p>
+          <p id="profileAddress" class="text-center"></p>
+          <!-- Follow Button -->
+          <div class="text-center mt-3">
+            <input type="hidden" id="csrfTokenFollow" value="{{ csrf_token }}">
+            <button id="followButton" class="btn btn-primary">Seguir</button>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</div>
+{% block extra_javascript %}
+<script>
+  // Function to fetch and display user profile in the modal
+async function showUserProfile(userId) {
+  try {
+    // Fetch profile data from the server
+    const response = await fetch(`/account/get-profile/${userId}/`);
+    if (response.ok) {
+      const result = await response.json();
+      const profile = result.profile
+      // Update modal content
+      document.getElementById("profileImage").src = profile.profile_image || '/static/images/default-profile.png';
+      document.getElementById("profileName").innerText = profile.name;
+      document.getElementById("profileBio").innerText = profile.bio || "Bio não informada";
+      document.getElementById("profileAddress").innerText = `${profile.address || "Endereço não informado"}`;
+
+      // Update follow button
+      const followButton = document.getElementById("followButton");
+      followButton.innerText = profile.is_following ? "Seguindo" : "Seguir";
+      followButton.disabled = profile.is_following;
+
+      // Set follow button action
+      followButton.onclick = async function () {
+        const csrfToken = document.getElementById("csrfTokenFollow").value;
+        // Make the POST request
+        const followResponse = await fetch(`/account/follow/${userId}/`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            }
+        });
+        if (followResponse.ok) {
+          followButton.innerText = "Seguindo";
+          followButton.disabled = true;
+        }
+      };
+
+      // Show the modal
+      const userProfileModal = new bootstrap.Modal(document.getElementById("userProfileModal"));
+      userProfileModal.show();
+    } else {
+      console.error("Erro ao buscar o perfil.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+}
+</script>
+{% endblock %}
