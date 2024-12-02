@@ -6,6 +6,13 @@ import os
 import shutil
 from django.utils.timezone import now
 
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 def user_profile_image_path(instance, filename):
     """
     Define o caminho dinâmico para armazenar a imagem de perfil do usuário.
@@ -16,9 +23,15 @@ def user_profile_image_path(instance, filename):
 
 
 class User(AbstractUser):
+    USER_TYPE_CHOICES = [
+        ("volunteer", "Voluntário"),
+        ("organization", "Organização"),
+    ]
+    typeuser = models.CharField(max_length=15, choices=USER_TYPE_CHOICES, default="volunteer")
     email = models.EmailField(unique=True)  # Garante que o email seja único
     following = models.ManyToManyField("self", symmetrical=False, related_name="followers", blank=True)
     is_blocked = models.BooleanField(default=False)
+    categories = models.ManyToManyField("Category", related_name="users", blank=True)
     profile_image = models.ImageField(
         upload_to=user_profile_image_path,  # Define o diretório dinâmico para a imagem
         blank=True,
@@ -62,6 +75,9 @@ class User(AbstractUser):
                 super().save(update_fields=["profile_image"])  # Atualiza apenas o campo profile_image
             else:
                 raise FileNotFoundError(f"Imagem padrão {static_image_path} não encontrada.")
+
+    def followers_count(self):
+        return self.following.count()
 
     def __str__(self):
         return self.username
@@ -144,12 +160,29 @@ class Volunteer(models.Model):
     
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="posts", null=True, blank=True)
+    event = models.ForeignKey(Event, on_delete=models.SET_NULL, related_name="posts", null=True, blank=True)
     text = models.TextField(max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="liked_posts", blank=True)   
+    
+    def like_count(self):
+        return self.likes.count()
+
+    def comment_count(self):
+        return self.comments.count()
+     
+    def __str__(self):
+        return f"Post by {self.user.username} at {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    content = models.TextField()
+    mentioned_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="mentioned_in_comments", blank=True)  # Relacionamento para usuários mencionados
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Post by {self.user.username} at {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"Comment by {self.user.username} on {self.post}"
 
 class ImagePost(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images")

@@ -1,0 +1,17 @@
+
+{% for follower in followers %}
+<div class="list-group-item d-flex align-items-center">
+    <img src="{{ follower.profile_image.url|default:'images/users/default-profile.png' }}" 
+         class="rounded-circle me-2" 
+         alt="{{ follower.username }}" 
+         style="width: 40px; height: 40px;"
+         onclick="showUserProfile('{{ follower.id }}')"
+         >
+    <div>
+        <h6  class="mb-0 username_follow">{{ follower.username }}</h6>
+        <small class="text-muted">{{ follower.bio|default:"Sem biografia" }}</small>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">Nenhum seguidor encontrado.</p>
+{% endfor %}

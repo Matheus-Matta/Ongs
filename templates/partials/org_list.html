@@ -1,0 +1,26 @@
+{% for organization in organizations %}
+<div class="list-group-item d-flex align-items-center mt-1 border border-light">
+  <!-- Imagem do Perfil -->
+  <img
+    src="{{ organization.profile_image.url|default:'/static/images/default-profile.png' }}"
+    class="rounded-circle me-2"
+    alt="{{ organization.username }}"
+    style="width: 40px; height: 40px;"
+    onclick="showUserProfile('{{ organization.id }}')"
+  />
+  <div class="flex-grow-1">
+    <!-- Nome da Organização -->
+    <h6 class="m-0 font-14">{{ organization.username }}</h6>
+    <small class="text-muted">
+      Entro em {{ organization.joined }}
+    </small>
+    <p class="m-0 text-muted">
+        {{ organization.address.city }}, {{ organization.address.state }}
+      </p>
+  </div>
+   <!-- Input hidden com categorias -->
+   <input type="hidden" class="organization-categories" value="{% for category in organization.categories.all %}{{ category.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+</div>
+{% empty %}
+<p class="text-muted">Nenhuma organização encontrada.</p>
+{% endfor %}

@@ -1,34 +1,35 @@
 {% extends "base.html" %} {% load static i18n %} {% block head_title %} Events {% endblock head_title %} {% block css %} {{ block.super }} 
 <div class="container-fluid">
   <!-- Início do título da página -->
-  <div class="row">
+  <div class="row mt-1 mb-1">
     <div class="col-12">
-      <div class="page-title-box">
-        <h4 class="page-title">Social Feed</h4>
+          <div class="d-flex align-items-center">
+            <img style="height: 28px;" src="{% static 'images/logo-icon.png' %}">
+            <h4 class="page-title font-18 ms-2">Eventos</h4>
+          </div>
       </div>
     </div>
   </div>
   <!-- Fim do título da página -->
 
-  <div class="row">
+  <div class="row px-4">
     <!-- Coluna da esquerda -->
     <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-1">
-      {% include 'partials/left-sidebar.html' %}
+      {% block left_sidebar %}
+        {% include 'partials/left-sidebar.html' with page_name='events' %}
+      
+      {% endblock left_sidebar %}
     </div>
     <!-- Fim da coluna da esquerda -->
     <div class="col-xl-9 col-lg-6 order-lg-2 order-xl-2">
         <div class="container-fluid">
-            <div class="page-title-box">
-              <h4 class="page-title">Eventos</h4>
-            </div>
-      
             <!-- Meus Eventos -->
             <h5>Meus Eventos</h5>
             <div class="row">
               {% for event in user_events %}
-              <div class="col-lg-4">
-                <div class="card project-box">
-                  <div class="card-body">
+              <div class="col-lg-4 mb-2">
+                <div  class="card project-box">
+                  <div class="card-body p-2">
                     <div class="dropdown float-end">
                       <a
                         href="#"
@@ -39,16 +40,27 @@
                         <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="#">Editar</a>
-                        <a class="dropdown-item" href="#">Excluir</a>
+                        <form method="POST" action="{% url 'delete_event' event.id %}">
+                          {% csrf_token %}
+                          <button type="submit" class="dropdown-item text-danger">
+                            <i class="mdi mdi-trash-can-outline me-2"></i> Excluir
+                          </button>
+                        </form>
                       </div>
                     </div>
                     <h4 class="mt-0">
-                      <a href="#" class="text-dark">{{ event.title }}</a>
+                      <a href="#" class="text-primary">{{ event.title }}</a>
                     </h4>
-                    <p class="text-muted">{{ event.date }} às {{ event.time }}</p>
-                    <p class="text-muted">{{ event.description }}</p>
-                    <a href="#" class="btn btn-primary">Ver Detalhes</a>
+                    <p style='min-height: 40px; max-height: 40px;' class="text-muted">{{ event.description }}</p>
+                    
+                    <p class="text-muted m-0">{{ event.date }} às {{ event.time }}</p>
+                    <!-- Quantidade de voluntários -->
+                    <div class="d-flex align-items-center m-0">
+                      <i class="mdi mdi-account-multiple-outline font-20 text-primary me-2"></i>
+                      <span class="text-muted">
+                        {{ event.volunteers.count }} Voluntário{{ event.volunteers.count|pluralize }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -63,13 +75,37 @@
               {% for event in other_events %}
               <div class="col-lg-4">
                 <div class="card project-box">
-                  <div class="card-body">
+                  <div class="card-body p-2">
                     <h4 class="mt-0">
-                      <a href="#" class="text-dark">{{ event.title }}</a>
+                      <a href="#" class="text-primary">{{ event.title }}</a>
                     </h4>
-                    <p class="text-muted">{{ event.date }} às {{ event.time }}</p>
-                    <p class="text-muted">{{ event.description }}</p>
-                    <a href="#" class="btn btn-primary">Ver Detalhes</a>
+                    <p style='min-height: 40px; max-height: 40px;' class="text-muted">{{ event.description }}</p>
+                    
+                    <p class="text-muted m-0">{{ event.date }} às {{ event.time }}</p>
+                    <!-- Quantidade de voluntários -->
+                    <div class="d-flex align-items-center m-0 mt-2">
+                      <div>
+                        {% if event.is_volunteer %}
+                        <!-- Botão desabilitado se o usuário já for voluntário -->
+                        <button class="btn btn-success" disabled>
+                          Participando
+                        </button>
+                        {% else %}
+                        <!-- Botão para participar do evento -->
+                        <button
+                          onclick="participar_evento(`{% url 'participar_evento' event.id %}`)"
+                          class="btn btn-info"
+                          data-url="{% url 'participar_evento' event.id %}"
+                          >Participar</button
+                        >
+                        {% endif %}
+                      </div>
+                      <i class="mdi mdi-account-multiple-outline font-20 text-primary mx-2"></i>
+                      <span class="text-muted">
+                        {{ event.volunteers.count }} Voluntário{{ event.volunteers.count|pluralize }}
+                      </span>
+                    </div>
+                   
                   </div>
                 </div>
               </div>
@@ -78,14 +114,16 @@
               {% endfor %}
             </div>
           </div>
-    <div>
-
+        <div>
   </div>
   <!-- Fim da row -->
 </div>
-
+{% include 'partials/edit_profile_modal.html' %} 
+{% include 'partials/perfil_modal.html' %}
 <!-- Fim do container -->
 {% endblock %} 
 {%block javascript%} 
+
 {{ block.super}}
+<script src="{% static 'js/multiSelect.js' %}"></script>
 {% endblock javascript %}

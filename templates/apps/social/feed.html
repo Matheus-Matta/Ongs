@@ -1,6 +1,30 @@
-{% extends "base.html" %} {% load static i18n %} {% block head_title %} Feed
-Social {% endblock head_title %} {% block css %} {{ block.super }}
+{% extends "base.html" %} {% load static i18n %} {% block head_title %} Pagina inicial {% endblock head_title %} 
+ 
+
+{% block css %} 
+
+{{ block.super }} 
+
+<link href="{% static 'css/multiSelect.css' %}" rel="stylesheet" type="text/css">
+
+
 <style>
+  .truncate-bio-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px; /* Defina o tamanho máximo */
+  }
+
+  .truncate-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Número de linhas antes do truncamento */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
   .ribbon-box {
     position: relative;
   }
@@ -39,22 +63,27 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
     border-radius: 8px;
   }
 </style>
-{% endblock css %} {% block page_content %}
+
+{% endblock css %} {% block page_content %} {{ block.super }}
 <div class="container-fluid">
   <!-- Início do título da página -->
-  <div class="row">
+  <div class="row p-1">
     <div class="col-12">
-      <div class="page-title-box">
-        <h4 class="page-title">Social Feed</h4>
+          <div class="d-flex align-items-center">
+            <img style="height: 28px;" src="{% static 'images/logo-icon.png' %}">
+            <h4 class="page-title font-18 ms-2">Social Feed</h4>
+          </div>
       </div>
     </div>
   </div>
   <!-- Fim do título da página -->
 
-  <div class="row">
+  <div class="row px-4">
     <!-- Coluna da esquerda -->
     <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-1">
-      {% include 'partials/left-sidebar.html' %}
+      {% block left_sidebar %}
+        {% include 'partials/left-sidebar.html' with page_name='feed' %}
+      {% endblock left_sidebar %}
     </div>
     <!-- Fim da coluna da esquerda -->
 
@@ -76,7 +105,7 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
                     id="postText"
                     name="text"
                     placeholder="Escreva algo..."
-                  ></textarea>
+                    required></textarea>
                   <div
                     class="p-1 bg-light d-flex justify-content-between align-items-center"
                   >
@@ -133,7 +162,7 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
 
       <!-- Loader -->
       <div class="text-center mb-3">
-        <a href="javascript:void(0);" class="text-danger">
+        <a href="javascript:void(0);" id="nextPage" class="text-danger">
           <i class="mdi mdi-spin mdi-loading me-1 font-16"></i> Carregar mais
         </a>
       </div>
@@ -145,42 +174,35 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
     <div class="col-xl-3 col-lg-6 order-lg-1 order-xl-2">
       <!-- Notícias -->
       <div class="card">
-        <div class="card-body">
-          <div class="dropdown float-end">
-            <a
-              href="#"
-              class="dropdown-toggle arrow-none card-drop"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-horizontal"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end">
-              <a href="javascript:void(0);" class="dropdown-item">Hoje</a>
-              <a href="javascript:void(0);" class="dropdown-item">Ontem</a>
-              <a href="javascript:void(0);" class="dropdown-item"
-                >Semana Passada</a
-              >
-              <a href="javascript:void(0);" class="dropdown-item"
-                >Mês Passado</a
-              >
-            </div>
-          </div>
-
+        <div class="card-body p-2">
+        
           <h4 class="header-title mb-1">Em Alta</h4>
 
           <!-- Notícias em alta -->
-          <div class="d-flex align-items-start mt-3">
-            <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
-            <div class="w-100">
-              <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
-                <strong>Globos de Ouro:</strong>
-                <span class="text-muted"
-                  >Os 27 melhores momentos da premiação</span
-                >
-              </a>
+          {% for post in posts_in_trend %}
+            <div class="d-flex align-items-start mt-1"
+            onclick="loadPosts(0, {{ post.id }})"
+            >
+              <i class="mdi mdi-trending-up me-2 font-18 text-primary"></i>
+              <div class="w-100">
+                <a class="mt-1 font-14 text-reset" href="javascript:void(0);">
+                  <div>
+                    <strong>{{ post.user.username }}</strong>
+                   
+                  </div>
+                  <span class="text-muted truncate-text">
+                    {{ post.text }}
+                  </span>
+                  <p style="opacity: 0.5;" class="text-primary m-0 font-11">
+                    Publicado {{ post.created_at }}
+                </p>
+                </a>
+              </div>
             </div>
-          </div>
+          {% empty %}
+              <p>Não há posts em alta no momento.</p>
+          {% endfor %}
+          
           <!-- Mais notícias... -->
         </div>
       </div>
@@ -188,50 +210,34 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
 
       <!-- Pessoas que você talvez conheça -->
       <div class="card">
-        <div class="card-body pb-0">
-          <div class="dropdown float-end">
-            <a
-              href="#"
-              class="dropdown-toggle arrow-none card-drop"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-horizontal"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end">
-              <a href="javascript:void(0);" class="dropdown-item">Ver Todos</a>
-            </div>
-          </div>
+        <div class="card-body p-3">
 
-          <h4 class="header-title mb-3">Pessoas que você talvez conheça</h4>
+          <h4 class="header-title mb-2 font-14">Volutarios que você talvez conheça</h4>
 
           <div class="inbox-widget">
             <!-- Exemplo de pessoa -->
-            <div class="inbox-item">
-              <div class="inbox-item-img">
-                <img
-                  src="{% static 'images/users/user-2.png' %}"
-                  class="rounded-circle"
-                  alt=""
-                />
+            {% for volunteer in non_followed_volunteers %}
+              <div onclick="showUserProfile('{{ volunteer.id }}')" class="inbox-item">
+                <div class="inbox-item-img">
+                  <img src="{{ volunteer.profile_image.url|default:'images/users/default-profile.png' }}" 
+                    class="rounded-circle me-2" 
+                    alt="{{ volunteer.username }}" 
+                    style="width: 40px; height: 40px;"
+                  >
+                </div>
+                <div>
+                  <p class="inbox-item-author m-0">{{ volunteer.username }}</p>
+                  <p class="inbox-item-address text-muted mb-1">{{ volunteer.address.city }}, {{ volunteer.address.state }}</p>
+                  <span style="opacity: 0.5;" class="text-primary m-0 font-11"><i class="mdi mdi-account-multiple-outline me-1"></i>{{ volunteer.followers.count }} Seguidores</span>
+                  <p class="text-muted m-0 truncate-bio-text">{{ volunteer.bio|default:"Sem bio" }}</p>
+                </div>
               </div>
-              <p class="inbox-item-author">Robb Stark</p>
-              <p class="inbox-item-text">O primeiro rei do Norte</p>
-              <p class="inbox-item-date">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary px-1 py-0"
-                >
-                  <i class="mdi mdi-plus font-16"></i>
-                </button>
-              </p>
+            {% empty %}
+                <p>Todos os voluntários já estão sendo seguidos.</p>
+            {% endfor %}
+              <!-- Mais pessoas... -->
             </div>
-            <!-- Mais pessoas... -->
-          </div>
 
-          <div class="mt-2 mb-3 text-center">
-            <a href="">Ver Mais <i class="mdi mdi-arrow-right"></i></a>
-          </div>
         </div>
       </div>
       <!-- Fim das pessoas que você talvez conheça -->
@@ -249,14 +255,19 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
   </div>
 </div>
 
-{% include 'partials/edit_profile_modal.html' %} 
+
 {% include 'partials/event_create_modal.html' %} 
+{% include 'partials/edit_profile_modal.html' %} 
 {% include 'partials/perfil_modal.html' %}
 {% include 'partials/toast_message.html' %}
 
 <!-- Fim do container -->
 {% endblock page_content %} {% block javascript %} {{ block.super }}
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script src="{% static 'js/multiSelect.js' %}"></script>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -448,24 +459,26 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
     });
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
     const caixaHistoria = document.getElementById("caixaHistoria");
-    const loadMoreButton = document.querySelector(".text-center a.text-danger");
+    const loadMoreButton = document.querySelector("#nextPage");
     let nextPage = 1;
 
     // Função para carregar posts
-    async function loadPosts(page = 1) {
+    async function loadPosts(page, postId=0) {
       try {
-        const response = await fetch(`/account/load-posts/${page}`);
+        const response = await fetch(`/account/load-posts/${page}/${postId}`);
         const result = await response.json();
         if (response.ok) {
-          document
-            .getElementById("caixaHistoria")
-            .insertAdjacentHTML("beforeend", result.html);
+          if (result.html.trim()) {
+            if(postId){
+              caixaHistoria.innerHTML = ""
+            }
+            caixaHistoria.insertAdjacentHTML("beforeend", result.html);
+          }
 
-          // Verifica se ainda há mais páginas para carregar
-          if (!result.html.trim()) {
-            loadMoreButton.style.display = "none"; // Esconde o botão se não houver mais conteúdo
+          // Esconde o botão caso não haja mais conteúdo
+          if (!result.html.trim() || postId) {
+              loadMoreButton.style.display = "none";
           }
         } else {
           console.error("Erro ao carregar posts.");
@@ -487,7 +500,6 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
         loadPosts(nextPage);
       });
     }
-  });
 
   // Função para abrir o modal de imagem
   async function showImageModal(url) {
@@ -505,26 +517,94 @@ Social {% endblock head_title %} {% block css %} {{ block.super }}
     });
   }
 
-  async function participar_evento(url) {
+  
+   async function toggleLike(url) {
     try {
-      const response = await fetch(url);
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        });
+        const result = await response.json();
+        if (response.ok) {
+            const likeButton = document.querySelector(`[onclick="toggleLike('${url}')"]`);
+            likeButton.innerHTML = `<i class="mdi mdi-heart${result.liked ? ' text-danger' : '-outline'}"></i> <p class="text-danger d-inline">${result.like_count} Likes</p>`;
+        }
+    } catch (error) {
+        console.error("Erro ao curtir:", error);
+    }
+  }
+  
+  function replyToComment(username, userId, postId) {
+    // Preenche o campo de input com o @username
+    const input = document.getElementById(`commentInput${postId}`);
+    input.focus();
+  
+    // Atualiza o valor do campo hidden com o ID do usuário mencionado
+    const mentionInput = document.getElementById(`mentionUserId${postId}`);
+    mentionInput.value = userId;
+  
+    // Atualiza o preview abaixo do comentário
+    const mentionPreview = document.getElementById(`mentionPreview${postId}`);
+    mentionPreview.innerHTML = `<small class="text-muted">Respondendo a <strong>@${username}</strong></small>`;
+  }
+  
+  async function addComment(url, post_id, form) {
+    event.preventDefault();
+  
+    const formData = new FormData(form);
+    const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+        body: formData,
+      });
+  
       const result = await response.json();
-      if (response.ok) {
-        const btn = document.querySelector(`a[data-url="${url}"]`);
-        const div = btn.parentNode;
-        btn.remove();
-        div.insertAdjacentHTML(
-          "beforeend",
-          `
-          <button class="btn btn-success p-1 mt-2" disabled>
-            Participando
-          </button>
-          `
+      if (response.ok && result.success) {
+        // Adiciona o novo comentário ao DOM
+        const commentBox = document.querySelector(
+          `.comment-box`
         );
-        showToast("success", result.message);
+  
+        commentBox.insertAdjacentHTML("beforebegin", result.comment_html);
+  
+        form.reset(); // Limpa o campo de entrada
+        document.getElementById(`mentionPreview${post_id}`).innerHTML = "";
       } else {
-        console.error("Erro ao carregar posts.");
-        showToast("danger", result.message);
+        console.error("Erro ao adicionar comentário.");
+      }
+    } catch (error) {
+      console.error("Erro ao enviar comentário:", error);
+    }
+  }
+  async function loadMoreComments(postId, currentPage) {
+    const button = document.getElementById(`loadMoreComments${postId}`);
+    
+    try {
+      const response = await fetch(`account/load-comments/${postId}/${currentPage}/`);
+      const result = await response.json();
+  
+      if (result.success) {
+
+        // Adiciona os novos comentários à seção de comentários
+        const commentBox = document.querySelector(`#comment-box_${postId}`)
+  
+        commentBox.insertAdjacentHTML("beforeend", result.html);
+  
+        // Verifica se há mais páginas
+        if (!result.has_next) {
+          button.style.display = "none"; // Esconde o botão se não houver mais comentários
+        } else {
+          button.setAttribute("onclick", `loadMoreComments(${postId}, ${currentPage + 1})`);
+        }
+      } else {
+        console.error("Erro ao carregar mais comentários.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);

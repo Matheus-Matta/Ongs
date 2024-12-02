@@ -1,12 +1,12 @@
-{% for post in page_obj.object_list %}
-<div class="card card-body mb-1">
+{% for post in posts %}
+<div class="card card-body mb-1 pb-1">
   <!-- Informações do usuário -->
   <div class="d-flex align-items-start">
     <img
       class="me-2 avatar-sm rounded-circle"
       src="{{ post.user.profile_image.url|default:'images/users/default-user.png' }}"
       alt="{{ post.user.username }}"
-      onclick="showUserProfile('{{ user.id }}')"
+      onclick="showUserProfile('{{ post.user.id }}')"
     />
     <div class="w-100">
       <h5 class="m-0">{{ post.user.username }}</h5>
@@ -86,30 +86,111 @@
               Evento</span
             >
           </div>
-          <footer>
+          <footer class="mb-2">
             <p>{{ post.event.description }}</p>
             <small class="fst-italic"
               >{{ post.event.date }} {{ post.event.time }}</small
             >
           </footer>
-          {% if post.is_volunteer %}
-          <!-- Botão desabilitado se o usuário já for voluntário -->
-          <button class="btn btn-success p-1 mt-2" disabled>
-            Participando
-          </button>
-          {% else %}
-          <!-- Botão para participar do evento -->
-          <a
-            onclick="participar_evento(`{% url 'participar_evento' post.event.id %}`)"
-            class="btn btn-info p-1 mt-2"
-            data-url="{% url 'participar_evento' post.event.id %}"
-            >Participar</a
-          >
-          {% endif %}
+
+          <div>
+            {% if post.is_volunteer %}
+            <!-- Botão desabilitado se o usuário já for voluntário -->
+            <button class="btn btn-success" disabled>
+              Participando
+            </button>
+            {% else %}
+            <!-- Botão para participar do evento -->
+            <button
+              onclick="participar_evento(`{% url 'participar_evento' post.event.id %}`)"
+              class="btn btn-info p-1 mt-2"
+              data-url="{% url 'participar_evento' post.event.id %}"
+              >Participar</button
+            >
+            {% endif %}
+          </div>
+
         </blockquote>
       </div>
     </div>
   </div>
   {% endif %}
+  <!-- Ações de Curtir e Comentar -->
+  <div class="mt-1">
+    <a
+      href="javascript:void(0);"
+      class="btn btn-sm btn-link text-muted p-0 m-0 me-2"
+      onclick="toggleLike('{% url 'add_like' post.id %}')"
+    >
+
+    {% if user in post.likes.all %} 
+      <i class="mdi mdi-heart text-danger"></i>
+      <p class="text-danger d-inline">{{ post.like_count }} Likes</p>
+    {% else %}
+      <i class="mdi mdi-heart-outline"></i>
+      <p class="d-inline">{{ post.like_count }} Likes</p>
+    {% endif %}
+      
+    </a>
+    <a href="javascript:void(0);" class="btn btn-sm btn-link text-muted p-0 m-0 me-2">
+      <i class="mdi mdi-comment-multiple-outline"></i> {{ post.comment_count }} Comments
+    </a>
+  </div>
+
+  <!-- Comentários -->
+  <div class="post-user-comment-box mt-2 p-1">
+    <div id="comment-box_{{post.id}}" class="comment-box m-0 p-0">
+      {% for comment in post.recent_comments %}
+      {% block comment_list %}
+        {% include 'partials/comment.html' with comment=comment %}
+      {% endblock comment_list %}
+    {% endfor %}
+    </div>
+    <!-- Botão para carregar mais comentários -->
+    {% if post.comment_count > 0 %}
+    <div class="text-center">
+      <button
+        class="btn btn-link text-muted font-12 p-0"
+        id="loadMoreComments{{ post.id }}"
+        onclick="loadMoreComments({{ post.id }}, 2)"
+      >
+        Carregar Mais Comentários
+      </button>
+    </div>
+    {% endif %}
+    <!-- Adicionar Comentário -->
+    <div class="d-flex align-items-center">
+      <img
+        class="me-2 avatar-sm rounded-circle"
+        src="{{ user.profile_image.url|default:'images/users/default-user.png' }}"
+        alt="{{ user.username }}"
+      />
+      <div class="w-100 m-0">
+        <form onsubmit="return addComment('{% url 'add_comment' post.id %}', {{ post.id }}, this)">
+          {% csrf_token %}
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            id="commentInput{{ post.id }}"
+            name="content"
+            placeholder="Adicionar comentário"
+          />
+          <!-- Campo hidden para o ID do usuário mencionado -->
+          <input
+            type="hidden"
+            id="mentionUserId{{ post.id }}"
+            name="mentioned_user"
+            value=""
+          />
+        </form>
+        <!-- Preview da menção -->
+        <div id="mentionPreview{{ post.id }}"></div>
+      </div>
+    </div>
+    
+  </div>
+
+  
 </div>
 {% endfor %}
+

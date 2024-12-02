@@ -1,0 +1,302 @@
+{% extends "base.html" %} 
+{% load static i18n %} 
+
+{% block head_title %}{% trans "Registro" %}{% endblock head_title %}
+
+{% block extra_css %} 
+
+<link href="{% static 'css/multiSelect.css' %}" rel="stylesheet" type="text/css">
+
+{% endblock extra_css %}
+
+{% block page_content %}
+<div class="account-pages mt-5 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="m-0 card">
+                    <div class="card-body p-4 pt-0">
+                        <div class="text-center w-75 m-auto">
+                            <div class="auth-logo">
+                                <a href="#" class="logo text-center">
+                                  <span class="logo-lg">
+                                    <img
+                                      src="{% static 'images/logomarca.jpeg' %}"
+                                      alt=""
+                                      height="140"
+                                    />
+                                  </span>
+                                </a>
+                            </div>
+                            <p class="text-muted m-1">Crie sua conta em segundos!</p>
+                        </div>
+                          
+                        <form id="register-form"  method="POST">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                     <!-- Username -->
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input class="form-control" type="text" id="username" name="username" placeholder="Digite seu username" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Tipo de usuário -->
+                                    <div class="mb-3">
+                                        <label for="typeuser" class="form-label text-primary">Tipo de perfil</label>
+                                        <select class="form-control text-primary border border-primary" id="typeuser" name="typeuser">
+                                            <option value="volunteer">Voluntário</option>
+                                            <option value="organization">Organização</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Email -->
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input class="form-control" type="email" id="email" name="email" placeholder="Digite seu email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Telefone -->
+                                    <div class="mb-3">
+                                        <label for="phone_number" class="form-label">Telefone</label>
+                                        <input class="form-control" type="text" id="phone_number" name="phone_number" placeholder="Digite seu telefone" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                     <!-- Senha -->
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Senha</label>
+                                        <input class="form-control" type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Confirmar senha -->
+                                    <div class="mb-3">
+                                        <label for="confirm_password" class="form-label">Confirme a Senha</label>
+                                        <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua senha" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                  <div class="mb-3">
+                                    <label for="categories" class="form-label">Categorias</label>
+                                    <select id="categories" name="categories" data-placeholder="Selecione..." multiple data-multi-select>
+                                      {% for category in categories %}
+                                          <option value="{{ category.id }}" 
+                                              {% if category in user.categories.all %}selected{% endif %}>
+                                              {{ category.name }}
+                                          </option>
+                                      {% endfor %}
+                                  </select>
+                                  </div>
+                                </div>
+                              </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                  <div class="mb-3">
+                                    <label for="city" class="form-label">Cidade</label>
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Digite o nome da sua cidade"
+                                      id="city"
+                                      name="city"
+                                      value="{{ user.address.city }}"
+                                    />
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="mb-3">
+                                    <label for="city" class="form-label">Estado</label>
+                                    <select name="state" class="form-select" aria-label="Default select example">
+                                      <option value="Acre">Acre</option>
+                                      <option value="Alagoas">Alagoas</option>
+                                      <option value="Amapá">Amapá</option>
+                                      <option value="Amazonas">Amazonas</option>
+                                      <option value="Bahia">Bahia</option>
+                                      <option value="Ceará">Ceará</option>
+                                      <option value="Distrito Federal">Distrito Federal</option>
+                                      <option value="Espírito Santo">Espírito Santo</option>
+                                      <option value="Goiás">Goiás</option>
+                                      <option value="Maranhão">Maranhão</option>
+                                      <option value="Mato Grosso">Mato Grosso</option>
+                                      <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                                      <option value="Minas Gerais">Minas Gerais</option>
+                                      <option value="Pará">Pará</option>
+                                      <option value="Paraíba">Paraíba</option>
+                                      <option value="Paraná">Paraná</option>
+                                      <option value="Pernambuco">Pernambuco</option>
+                                      <option value="Piauí">Piauí</option>
+                                      <option value="Rio de Janeiro" selected>Rio de Janeiro</option>
+                                      <option value="Rio Grande do Norte">
+                                        Rio Grande do Norte
+                                      </option>
+                                      <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                                      <option value="Rondônia">Rondônia</option>
+                                      <option value="Roraima">Roraima</option>
+                                      <option value="Santa Catarina">Santa Catarina</option>
+                                      <option value="São Paulo">São Paulo</option>
+                                      <option value="Sergipe">Sergipe</option>
+                                      <option value="Tocantins">Tocantins</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            
+                            <!-- Endereço -->
+                            <div class="mb-3">
+                                <label for="address_line" class="form-label">Endereço</label>
+                                <input class="form-control" type="text" id="address_line" name="address_line" placeholder="Digite seu endereço" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Número -->
+                                    <div class="col mb-3">
+                                        <label for="address_number" class="form-label">Número</label>
+                                        <input class="form-control" type="text" id="address_number" name="address_number" placeholder="Número da residência" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- CEP -->
+                                    <div class="mb-3">
+                                        <label for="postal_code" class="form-label">CEP</label>
+                                        <input class="form-control" type="text" id="postal_code" name="postal_code" placeholder="CEP (ex: 12345-678)" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Biografia -->
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Biografia</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="4" placeholder="Conte-nos sobre você (máx. 500 caracteres)"></textarea>
+                            </div>
+
+                           
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="checkbox-signup" required>
+                                    <label class="form-check-label" for="checkbox-signup">Aceitar <a href="{% url 'termo_uso' %}" class="text-primary">Termos de uso</a></label>
+                                </div>
+                            </div>
+
+                            <!-- Botão de envio -->
+                            <div class="text-center d-grid">
+                                <button class="btn btn-success">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <p class="text-secondary">Já tem uma Conta ? <a href="{% url 'index' %}" class="text-primary ms-1"><b>Logar</b></a></p>
+            </div> <!-- end col -->
+        </div>
+
+    </div>
+</div>
+
+{% block extra_javascript %}
+
+<script src="{% static 'js/multiSelect.js' %}"></script>
+ 
+<script>
+    const form = document.getElementById("register-form");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        const postalCodeInput = document.getElementById("postal_code");
+        let postalCodeValue = postalCodeInput.value;
+
+        // Validação do formato do postal_code
+        postalCodeValue = postalCodeValue.replace(/\D/g, ""); // Remove tudo que não for número
+        if (postalCodeValue.length === 8 && !postalCodeValue.includes("-")) {
+            postalCodeValue = `${postalCodeValue.slice(0, 5)}-${postalCodeValue.slice(5)}`;
+            postalCodeInput.value = postalCodeValue; // Atualiza o campo com o formato correto
+        }
+
+        // Valida se o formato final está correto
+        if (!/^\d{5}-\d{3}$/.test(postalCodeValue)) {
+            postalCodeInput.classList.add("is-invalid");
+            const existingFeedback = postalCodeInput.nextElementSibling;
+            if (!existingFeedback || !existingFeedback.classList.contains("invalid-feedback")) {
+                postalCodeInput.insertAdjacentHTML("afterend", `<div class="invalid-feedback">O CEP deve estar no formato 12345-678.</div>`);
+            }
+            return; // Interrompe o envio se o CEP estiver inválido
+        }
+
+        // Validação e formatação do número de telefone
+        const phoneNumberInput = document.getElementById("phone_number");
+        let phoneNumberValue = phoneNumberInput.value;
+        phoneNumberValue = phoneNumberValue.replace(/\D/g, ""); // Remove tudo que não for número
+        phoneNumberInput.value = phoneNumberValue; // Atualiza o campo com o formato correto
+
+        if (!/^55\d{11}$/.test(phoneNumberValue)) {
+            phoneNumberInput.classList.add("is-invalid");
+            const existingFeedback = phoneNumberInput.nextElementSibling;
+            if (!existingFeedback || !existingFeedback.classList.contains("invalid-feedback")) {
+                phoneNumberInput.insertAdjacentHTML("afterend", `<div class="invalid-feedback">O número de telefone deve estar no formato 5521912345678.</div>`);
+            }
+            return; // Interrompe o envio se o telefone estiver inválido
+        }
+
+        // Resetar erros anteriores
+        document.querySelectorAll(".is-invalid").forEach(el => el.classList.remove("is-invalid"));
+        document.querySelectorAll(".invalid-feedback").forEach(el => el.remove());
+
+        fetch("{% url 'account_register' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{% url 'index' %}";
+                } else {
+                    const field = document.getElementById(data.field);
+                    if (field) { // Verifica se o campo existe
+                        field.classList.add("is-invalid");
+
+                        // Remove mensagens duplicadas
+                        const existingFeedback = field.nextElementSibling;
+                        if (existingFeedback && existingFeedback.classList.contains("invalid-feedback")) {
+                            existingFeedback.remove();
+                        }
+
+                        field.insertAdjacentHTML("afterend", `<div class="invalid-feedback">${data.message}</div>`);
+                    } else {
+                        console.warn(`Campo com ID '${data.field || "undefined"}' não encontrado.`);
+                        alert(data.message || "Erro ao registrar usuário.");
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+            });
+    });
+
+</script>
+{% endblock %}
+{% endblock %}
+

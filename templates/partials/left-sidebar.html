@@ -14,7 +14,7 @@
         <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editProfileModal">
           <i class="mdi mdi-account-edit me-2"></i> Editar Perfil
         </a>
-        <a href="{% url 'account_logout' %}"" class="dropdown-item">
+        <a href="{% url 'account_logout' %}" class="dropdown-item">
           <i class="mdi mdi-logout me-2"></i> Sair
         </a>
       </div>
@@ -26,6 +26,7 @@
         src="{{ user.profile_image.url|default:'images/users/user-1.png' }}"
         alt="{{ user.username }}"
         height="48"
+        onclick="showUserProfile('{{ user.id }}')"
       />
       <div class="w-100 ps-1">
         <h5 class="mt-1 mb-0">{{ user.username }}</h5>
@@ -35,68 +36,169 @@
       </div>
     </div>
 
-    <div class="list-group list-group-flush mt-2 font-15">
-      <a
-        href="javascript:void(0);"
-        class="list-group-item list-group-item-action text-primary fw-semibold border-0 font-18 d-flex align-items-center"
-      >
-        <i class="mdi mdi-image-filter-black-white font-24 me-1"></i>
-        Feed de Notícias
-      </a>
-      <a
-        href="javascript:void(0);"
-        class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center"
-      >
-        <i class="mdi mdi-forum font-24 me-1"></i> Mensagens
-      </a>
-      <a
-        href="javascript:void(0);"
-        class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center"
-      >
-        <i class="mdi mdi-calendar-month-outline font-24 me-1"></i>
-        Eventos
-      </a>
-      <a
-        href="javascript:void(0);"
-        class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center"
-      >
-        <i class="mdi mdi-account-multiple-outline font-24 me-1"></i>
-        Seguidores
-      </a>
-      <a
-        href="javascript:void(0);"
-        class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center"
-      >
-        <i class="mdi mdi-domain font-24 me-1"></i> Organização
-      </a>
+      <div class="list-group list-group-flush mt-2 font-15">
+        <a
+            href="{% url 'index' %}"
+            class="list-group-item list-group-item-action fw-semibold border-0 font-18 d-flex align-items-center {% if page_name == 'feed' %}text-primary{% endif %}"
+        >
+            <i class="mdi mdi-image-filter-black-white font-24 me-1"></i>
+            Pagina inicial
+        </a>
+        <a
+            href="{% url 'chat' %}"
+            class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center {% if page_name == 'messages' %}text-primary{% endif %}"
+        >
+            <i class="mdi mdi-forum font-24 me-1"></i> Mensagens
+        </a>
+        <a
+            href="{% url 'events' %}"
+            class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center {% if page_name == 'events' %}text-primary{% endif %}"
+        >
+            <i class="mdi mdi-calendar-month-outline font-24 me-1"></i>
+            Eventos
+        </a>
+        <a
+            href="javascript:void(0);"
+            id="followers"
+            class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center {% if page_name == 'followers' %}text-primary{% endif %}"
+        >
+            <i class="mdi mdi-account-multiple-outline font-24 me-1"></i>
+            Seguidores
+        </a>
+        <a
+            href="javascript:void(0);"
+            id="organization"
+            class="list-group-item list-group-item-action border-0 font-18 d-flex align-items-center {% if page_name == 'organization' %}text-primary{% endif %}"
+        >
+            <i class="mdi mdi-domain font-24 me-1"></i> Organização
+        </a>
     </div>
 
-    <h6 class="font-13 text-muted ps-3 my-3 text-uppercase">
-      Organização que você segue
-    </h6>
-
+    {% if page_name == 'feed' %}
+    
+    
     <div class="px-2">
       <!-- Exemplo de páginas -->
-      <div class="d-flex align-items-center mb-2">
-        <div class="rounded-circle vw-10">
-          <div class="inbox-item-img">
-            <img src="{% static 'images/users/user-2.png' %}"
-            class="rounded-circle vw-10" style=" width: 25px !important; "/>
+      <h6 class="font-13 text-muted ps-3 my-3 text-uppercase">
+        Organização que você segue
+      </h6>
+      {% for org in followed_organizations %}
+        <div style="cursor: pointer;" onclick="showUserProfile('{{ org.id }}')" class="d-flex align-items-center mb-2 border-bottom border-light pb-1">
+          <div class="rounded-circle vw-10">
+            <div class="inbox-item-img">
+              <img
+                class="d-flex align-items-start rounded"
+                src="{{  org.profile_image.url|default:'images/users/user-1.png' }}"
+                alt="{{  org.username }}"
+                height="28"
+              />
+            </div>
           </div>
-        </div>
-        <div class="w-100 ps-2">
-          <h5 class="mt-1 mb-0 font-family-primary fw-semibold">
-            <a href="javascript: void(0);" class="text-reset"
-              >Time de Futebol</a
-            >
-          </h5>
-        </div>
+          <div class="w-100 ps-2">
+            <h5 class="m-0 mb-0 font-family-primary fw-semibold font-16">
+                {{  org.username }}
+            </h5>
+          </div>
+          <div class="text-muted">
+              Seguindo
+          </div>
       </div>
+    {% empty %}
+        <p>Você ainda não segue nenhuma organização.</p>
+    {% endfor %}
+      
       <!-- Mais páginas... -->
     </div>
+    {% endif %}
+    
+
   </div>
 </div>
 
 <!--  destaque lateral direita  -->
 <div class="card"></div>
 <!-- Fim do vídeo -->
+{% include 'partials/followers_modal.html' %}
+{% include 'partials/org_modal.html' %}
+
+{% block extra_javascript %}
+<script>
+      async function showFollowers() {
+        const followersList = document.getElementById("followersList");
+        followersList.innerHTML = "<p>Carregando...</p>"; // Placeholder enquanto carrega
+
+        try {
+            const response = await fetch(`{% url 'get_followers' %}`);
+            if (response.ok) {
+                const result = await response.json(); // Recebe o HTML gerado no servidor
+                followersList.innerHTML = result.html; // Atualiza o conteúdo do modal
+                const followersModal = new bootstrap.Modal(document.getElementById("followersModal"));
+                followersModal.show(); // Abre o modal
+            } else {
+                followersList.innerHTML = "<p>Erro ao carregar os seguidores.</p>";
+            }
+        } catch (error) {
+            console.error("Erro ao carregar os seguidores:", error);
+            followersList.innerHTML = "<p>Erro ao carregar os seguidores.</p>";
+        }
+    }
+
+    // Adicione o evento ao link de seguidores
+    document.querySelector('#followers').addEventListener("click", function (e) {
+        e.preventDefault();
+        showFollowers();
+    });
+
+</script>
+
+<script>
+
+  let currentPage = 1;
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoriesFilter = document.getElementById("categoriesFilter");
+    const loadMoreButton = document.getElementById("loadMoreOrganizations");
+    const organizationsList = document.getElementById("organizationsList");
+  
+    // Função para carregar organizações
+    async function loadOrganizations(page) {
+      try {
+        const response = await fetch(`/account/get_organizations/${page}`);
+        const data = await response.json();
+        if (data.success) {
+          if(page == 1){
+            organizationsList.innerHTML = ""
+          } 
+          // Adiciona os novos itens
+          organizationsList.insertAdjacentHTML("beforeend", data.html);
+  
+          // Esconde o botão se não houver mais páginas
+          if (!data.has_more) {
+            loadMoreButton.style.display = "none";
+          } else {
+            loadMoreButton.style.display = "block";
+          }
+        } else {
+          loadMoreButton.style.display = "none"; // Esconde o botão se falhar
+        }
+      } catch (error) {
+        console.error("Erro ao carregar organizações:", error);
+      }
+    }
+  
+    // Evento para carregar mais organizações
+    loadMoreButton.addEventListener("click", function () {
+      currentPage++;
+      loadOrganizations(currentPage);
+    });
+  
+  // Adicione o evento ao link de seguidores
+  document.querySelector('#organization').addEventListener("click", function (e) {
+    e.preventDefault();
+    loadOrganizations(1);
+    const organizationsModal = new bootstrap.Modal(document.getElementById("organizationsModal"));
+    organizationsModal.show();
+  });
+   
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+
+<div
+  class="modal fade"
+  id="followersModal"
+  tabindex="-1"
+  aria-labelledby="followersModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followersModalLabel">Seguidores</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Barra de pesquisa -->
+        <div class="mb-3">
+          <input
+            type="text"
+            id="searchFollowers"
+            class="form-control"
+            placeholder="Pesquisar seguidores..."
+          />
+        </div>
+        <!-- Lista de seguidores -->
+        <div id="followersList" class="list-group">
+          <!-- Conteúdo será carregado dinamicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extra_javascript %}
+<script>
+    const bar = document.getElementById("searchFollowers")
+    bar.addEventListener("input", function(){
+        const searchInput = this; // O campo de entrada
+        const filterText = searchInput.value.toLowerCase(); // Texto digitado
+        const followerItems = document.querySelectorAll("#followersList .list-group-item"); // Itens da lista
+    
+        // Verifica se a lista está carregada
+        if (followerItems.length === 0) {
+            console.warn("A lista de seguidores ainda não foi carregada.");
+            return;
+        }
+    
+        followerItems.forEach(item => {
+            const name = item.querySelector(".username_follow"); // Nome do seguidor
+            if (name) {
+                const text = name.textContent.toLowerCase();
+                if (text.includes(filterText)) {
+                    item.classList.remove("d-none"); // Remove a classe d-none para exibir
+                } else {
+                    item.classList.add("d-none"); // Adiciona a classe d-none para ocultar
+                }
+            }
+        });
+    });
+  </script>
+{% endblock %}

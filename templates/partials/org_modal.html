@@ -1,0 +1,82 @@
+{% block css %} 
+
+{% endblock css %}
+<div
+  class="modal fade"
+  id="organizationsModal"
+  tabindex="-1"
+  aria-labelledby="organizationsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="organizationsModalLabel">Organizações</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Multi-select de categorias -->
+        <div class="mb-3">
+                <select class="d-inline"  id="categories" name="categories" data-placeholder="Selecione..." multiple data-multi-select>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                </select>
+            <button id="filterButton" class="btn btn-primary col-md-2 p-0 font-14 mt-2">Buscar</button>
+        </div>
+
+        <!-- Lista de organizações -->
+        <div id="organizationsList" class="list-group">
+          <!-- Conteúdo será carregado dinamicamente -->
+        </div>
+
+        <!-- Botão de carregar mais -->
+        <div class="text-center m-0 mt-3">
+            <p id="loadMoreOrganizations" class='text-primary m-0'>Carregar Mais</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extra_javascript %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoriesFilter = document.getElementById("categories");
+        const filterButton = document.getElementById("filterButton");
+        const organizationsList = document.getElementById("organizationsList");
+    
+        filterButton.addEventListener("click", function () {
+            // Capturar os valores dos inputs `categories[]`
+            const selectedCategories = Array.from(categoriesFilter.querySelectorAll("input[name='categories[]']"))
+                .map(input => input.value);
+    
+            // Selecionar todas as organizações da lista
+            const organizationItems = organizationsList.querySelectorAll(".list-group-item");
+    
+            // Filtrar organizações pela categoria
+            organizationItems.forEach(item => {
+                const organizationCategories = item.querySelector(".organization-categories").value.split(",");
+                console.log(organizationCategories)
+                // Verificar se há interseção entre as categorias selecionadas e as categorias da organização
+                const matches = selectedCategories.some(category => organizationCategories.includes(category));
+    
+                if (matches || selectedCategories.length === 0) {
+                    // Mostrar organização se houver correspondência ou nenhuma categoria selecionada
+                    item.classList.remove("d-none");
+                } else {
+                    // Ocultar organização se não houver correspondência
+                    item.classList.add("d-none");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

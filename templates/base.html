@@ -20,15 +20,15 @@
     <!--[if lt IE 9]>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
-
+    
     <!-- App favicon -->
-    <link rel="icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="icon" href="{% static 'images/logo-icon.png' %}" />
 
     {% block css %}
     <!-- Project-specific CSS -->
     {% block extra_css %} {% endblock extra_css %} 
     {% block css_wrapper %} 
-    {% include "partials/head-css.html" %} 
+    {% include "partials/head-css.html" with demo=default %} 
     {% endblock css_wrapper %}
 
     <!-- Icons -->
@@ -40,10 +40,22 @@
     {% endblock css %}
   </head>
 
-  <body {% block body_extra %}{% endblock body_extra %}>
+  <body 
+  {% block body_extra %}
+  {% if dark_exemple %} 
+  class="loading" data-layout='{"mode": "dark", "width": "fluid", "menuPosition": "fixed",
+  "sidebar": { "color": "dark", "size": "default", "showuser": false}, "topbar":
+  {"color": "dark"}, "showRightSidebarOnPageLoad": true}' 
+  {% else %}
+  class="loading" data-layout='{"mode": "light", "width": "fluid", "menuPosition":
+  "fixed", "sidebar": { "color": "light", "size": "default", "showuser": false},
+  "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}' 
+  {% endif %} 
+  {% endblock body_extra %}>
     {% block page_content %}
     <!-- Main content will be injected here -->
     {% endblock page_content %}
+    
   </body>
 
   <!-- Le javascript -->
@@ -70,6 +82,31 @@
       const toastEl = toastContainer.lastElementChild;
       const toast = new bootstrap.Toast(toastEl);
       toast.show();
+    }
+    async function participar_evento(url) {
+      try {
+        const response = await fetch(url);
+        const result = await response.json();
+        if (response.ok) {
+          const btn = document.querySelector(`button[data-url="${url}"]`);
+          const div = btn.parentNode;
+          btn.remove();
+          div.insertAdjacentHTML(
+            "beforebegin",
+            `
+            <button class="btn btn-success" disabled>
+              Participando
+            </button>
+            `
+          );
+          showToast("success", result.message);
+        } else {
+          console.error("Erro ao carregar posts.");
+          showToast("danger", result.message);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
     }
   </script>
   {% endblock javascript %} {% block extra_javascript_bottom %} 

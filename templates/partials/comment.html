@@ -1,0 +1,23 @@
+<div class="d-flex align-items-start mt-1 mb-1 py-1 border-bottom border-muted">
+  <img
+    class="me-2 avatar-sm rounded-circle"
+    src="{{ comment.user.profile_image.url }}"
+    alt="{{ comment.user.username }}"
+    onclick="showUserProfile('{{ comment.user.id }}')"
+  />
+  <div class="w-100">
+    <h5 class="m-0">
+      {{ comment.user.username }}
+      <small class="text-muted ms-2">{{ comment.created_at }}</small>
+    </h5>
+    <p class="mb-0">{{ comment.content }}</p>
+    <a
+      href="javascript:void(0);"
+      class="text-muted font-13 d-inline-block m-0"
+      onclick="replyToComment('{{ comment.user.username }}', '{{ comment.user.id }}', '{{ comment.post.id }}')"
+    >
+      <i class="mdi mdi-reply"></i>
+      Responder
+    </a>
+  </div>
+</div>
